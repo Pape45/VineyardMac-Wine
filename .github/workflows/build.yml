@@ -4,6 +4,12 @@ on:
   pull_request:
   push:
   workflow_dispatch:
+    inputs:
+      upload_to_r2:
+        description: Upload Libraries.tar.gz, WhiskyWineVersion.plist, and SUMS.sha to R2
+        required: false
+        type: boolean
+        default: false
 
 env: 
   CC: clang
@@ -269,8 +275,8 @@ jobs:
           name: SUMS
           path: SUMS.sha
 
-      - name: Upload Libraries to WhiskyBucket
-        if: ${{ github.ref == 'refs/heads/7.7' }}
+      - name: Upload Libraries to VineyardMac R2
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.upload_to_r2 }}
         env:
           RCLONE_CONFIG_R2_TYPE: s3
           RCLONE_CONFIG_R2_PROVIDER: Cloudflare
@@ -280,6 +286,6 @@ jobs:
           RCLONE_CONFIG_R2_ENDPOINT: ${{ secrets.RCLONE_ENDPOINT }}
         run: |
           brew install rclone
-          rclone copy Libraries.tar.gz r2:whisky-bucket/Wine
-          rclone copy WhiskyWineVersion.plist r2:whisky-bucket/Wine
-          rclone copy SUMS.sha r2:whisky-bucket/Wine
+          rclone copy Libraries.tar.gz r2:vineyardmac/Wine
+          rclone copy WhiskyWineVersion.plist r2:vineyardmac/Wine
+          rclone copy SUMS.sha r2:vineyardmac/Wine
