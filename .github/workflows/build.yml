@@ -59,7 +59,11 @@ jobs:
         run: |
           # mingw-w64 12+ defaults to UCRT; this Wine branch still expects MSVCRT.
           brew tap-new vineyardmac/build-deps
-          curl -L -o "$(brew --repo vineyardmac/build-deps)/Formula/cx-llvm.rb" https://raw.githubusercontent.com/Gcenx/homebrew-wine/1b2afa7cfa7718d9ea209698f3d1b11f87bba205/Formula/cx-llvm.rb
+          CX_LLVM_FORMULA="$(brew --repo vineyardmac/build-deps)/Formula/cx-llvm.rb"
+          curl -L -o "$CX_LLVM_FORMULA" https://raw.githubusercontent.com/Gcenx/homebrew-wine/1b2afa7cfa7718d9ea209698f3d1b11f87bba205/Formula/cx-llvm.rb
+          sed -i '' '/-DLIBOMP_ARCH=x86_64/a\
+              -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          ' "$CX_LLVM_FORMULA"
           curl -L -o "$(brew --repo vineyardmac/build-deps)/Formula/mingw-w64.rb" https://raw.githubusercontent.com/Homebrew/homebrew-core/31209a399a7b40bf2cd3abd7aee2715547ccd5bd/Formula/m/mingw-w64.rb
           brew install --formula --build-from-source vineyardmac/build-deps/cx-llvm
           brew install --formula vineyardmac/build-deps/mingw-w64
