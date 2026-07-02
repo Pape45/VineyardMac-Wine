@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#pragma makedep unix
+
 unsigned short wine_32on64_cs32 = 0;
 unsigned short wine_32on64_cs64 = 0;
 unsigned short wine_32on64_ds32 = 0;
