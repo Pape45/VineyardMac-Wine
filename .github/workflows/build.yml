@@ -55,16 +55,23 @@ jobs:
           brew update
           brew install "${REQUIRED_PACKAGES[@]}"
 
-      - name: Install mingw
+      - name: Install pinned build tools
         run: |
           # mingw-w64 12+ defaults to UCRT; this Wine branch still expects MSVCRT.
           brew tap-new vineyardmac/build-deps
+          curl -L -o "$(brew --repo vineyardmac/build-deps)/Formula/cx-llvm.rb" https://raw.githubusercontent.com/Gcenx/homebrew-wine/1b2afa7cfa7718d9ea209698f3d1b11f87bba205/Formula/cx-llvm.rb
           curl -L -o "$(brew --repo vineyardmac/build-deps)/Formula/mingw-w64.rb" https://raw.githubusercontent.com/Homebrew/homebrew-core/31209a399a7b40bf2cd3abd7aee2715547ccd5bd/Formula/m/mingw-w64.rb
-          brew install --formula vineyardmac/build-deps/mingw-w64
+          brew install --formula vineyardmac/build-deps/cx-llvm vineyardmac/build-deps/mingw-w64
 
-      - name: Add bison to PATH
+      - name: Add bison and cx-llvm to PATH
         run: |
           echo "$(brew --prefix bison)/bin" >> $GITHUB_PATH
+          echo "$(brew --prefix cx-llvm)/bin" >> $GITHUB_PATH
+
+      - name: Check compiler
+        run: |
+          clang --version
+          printf 'int main(void){return 0;}' | clang -x c -m64 -mabi=ms -c -o /tmp/mabi.o -
 
       - name: Configure wine64
         run: |
