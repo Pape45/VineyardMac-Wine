@@ -53,6 +53,7 @@
 #define HRESULT __carbon_HRESULT
 #define STDMETHODCALLTYPE __carbon_STDMETHODCALLTYPE
 #define PAGE_SHIFT __carbon_PAGE_SHIFT
+#include <CoreFoundation/CFPlugInCOM.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/hid/IOHIDLib.h>
 #undef ULONG

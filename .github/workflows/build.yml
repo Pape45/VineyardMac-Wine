@@ -144,6 +144,7 @@ jobs:
           #define HRESULT __carbon_HRESULT
           #define STDMETHODCALLTYPE __carbon_STDMETHODCALLT
           #include <MacTypes.h>
+          #include <CoreFoundation/CFPlugInCOM.h>
           #include <mach/mach_time.h>
           #include <CoreMIDI/CoreMIDI.h>
           #include <AudioUnit/AudioUnit.h>
@@ -178,6 +179,65 @@ jobs:
           EOF
 
           xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/coremidi.c"
+
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/iokit.c" <<'EOF'
+          #define E_PENDING __carbon_E_PENDING
+          #define ULONG __carbon_ULONG
+          #define E_INVALIDARG __carbon_E_INVALIDARG
+          #define E_OUTOFMEMORY __carbon_E_OUTOFMEMORY
+          #define E_HANDLE __carbon_E_HANDLE
+          #define E_ACCESSDENIED __carbon_E_ACCESSDENIED
+          #define E_UNEXPECTED __carbon_E_UNEXPECTED
+          #define E_FAIL __carbon_E_FAIL
+          #define E_ABORT __carbon_E_ABORT
+          #define E_POINTER __carbon_E_POINTER
+          #define E_NOINTERFACE __carbon_E_NOINTERFACE
+          #define E_NOTIMPL __carbon_E_NOTIMPL
+          #define S_FALSE __carbon_S_FALSE
+          #define S_OK __carbon_S_OK
+          #define HRESULT_FACILITY __carbon_HRESULT_FACILITY
+          #define IS_ERROR __carbon_IS_ERROR
+          #define FAILED __carbon_FAILED
+          #define SUCCEEDED __carbon_SUCCEEDED
+          #define MAKE_HRESULT __carbon_MAKE_HRESULT
+          #define HRESULT __carbon_HRESULT
+          #define STDMETHODCALLTYPE __carbon_STDMETHODCALLTYPE
+          #define PAGE_SHIFT __carbon_PAGE_SHIFT
+          #include <CoreFoundation/CFPlugInCOM.h>
+          #include <IOKit/IOKitLib.h>
+          #include <IOKit/hid/IOHIDLib.h>
+          #include <IOKit/IOCFPlugIn.h>
+          #include <IOKit/usb/IOUSBLib.h>
+          #undef E_PENDING
+          #undef ULONG
+          #undef E_INVALIDARG
+          #undef E_OUTOFMEMORY
+          #undef E_HANDLE
+          #undef E_ACCESSDENIED
+          #undef E_UNEXPECTED
+          #undef E_FAIL
+          #undef E_ABORT
+          #undef E_POINTER
+          #undef E_NOINTERFACE
+          #undef E_NOTIMPL
+          #undef S_FALSE
+          #undef S_OK
+          #undef HRESULT_FACILITY
+          #undef IS_ERROR
+          #undef FAILED
+          #undef SUCCEEDED
+          #undef MAKE_HRESULT
+          #undef HRESULT
+          #undef STDMETHODCALLTYPE
+          #undef PAGE_SHIFT
+
+          int main(void)
+          {
+              return kIOReturnSuccess;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/iokit.c"
 
   build:
     needs: sdk-smoke
