@@ -25,7 +25,9 @@
 #include "config.h"
 
 #ifdef HAVE_AVFOUNDATION_AVFOUNDATION_H
-#import <AVFoundation/AVFoundation.h>
+#import <Foundation/Foundation.h>
+#import <AVFoundation/AVMediaFormat.h>
+#import <AVFoundation/AVCaptureDevice.h>
 #endif
 
 #include "coreaudio_cocoa.h"
