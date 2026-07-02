@@ -30,7 +30,6 @@
 #include <dlfcn.h>
 #include <sys/stat.h>
 #ifdef HAVE_SECURITY_SECURITY_H
-#include <Security/SecImportExport.h>
 #include <Security/SecTrustSettings.h>
 #include <Security/Security.h>
 #endif
@@ -645,15 +644,15 @@ static void load_root_certs(void)
             for (i = 0; i < CFArrayGetCount(certs); i++)
             {
                 SecCertificateRef cert = (SecCertificateRef)CFArrayGetValueAtIndex(certs, i);
-                CFDataRef certData;
-                if ((status = SecItemExport(cert, kSecFormatX509Cert, 0, NULL, &certData)) == errSecSuccess)
+                CFDataRef certData = SecCertificateCopyData(cert);
+                if (certData)
                 {
                     BYTE *data = add_cert( CFDataGetLength(certData) );
                     if (data) memcpy( data, CFDataGetBytePtr(certData), CFDataGetLength(certData) );
                     CFRelease(certData);
                 }
                 else
-                    WARN("could not export certificate %u to X509 format: 0x%08x\n", i, (unsigned int)status);
+                    WARN("could not copy certificate %u data\n", i);
             }
             CFRelease(certs);
         }
