@@ -56,8 +56,10 @@ jobs:
           brew install "${REQUIRED_PACKAGES[@]}"
 
       - name: Install mingw
-        continue-on-error: true
-        run: brew install mingw-w64
+        run: |
+          # mingw-w64 12+ defaults to UCRT; this Wine branch still expects MSVCRT.
+          curl -L -o mingw-w64.rb https://raw.githubusercontent.com/Homebrew/homebrew-core/31209a399a7b40bf2cd3abd7aee2715547ccd5bd/Formula/m/mingw-w64.rb
+          brew install --formula --build-from-source ./mingw-w64.rb
 
       - name: Add bison to PATH
         run: |
