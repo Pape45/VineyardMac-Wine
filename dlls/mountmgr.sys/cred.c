@@ -32,8 +32,10 @@
 #define LoadResource mac_LoadResource
 #define GetCurrentThread mac_GetCurrentThread
 #include <CoreServices/CoreServices.h>
+#include <Security/cssmtype.h>
 #include <Security/SecKeychain.h>
 #include <Security/SecKeychainItem.h>
+#include <Security/SecKeychainSearch.h>
 #undef LoadResource
 #undef GetCurrentThread
 #endif
