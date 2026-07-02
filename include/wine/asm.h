@@ -27,6 +27,12 @@
 # define __ASM_NAME(name) name
 #endif
 
+#if defined(__APPLE__)
+# define __ASM_LOCAL_LABEL(label) "L" label
+#else
+# define __ASM_LOCAL_LABEL(label) ".L" label
+#endif
+
 #if defined(__WINE_PE_BUILD) && (defined(__i386__) || defined(__i386_on_x86_64__))
 # define __ASM_STDCALL(name,args)  "_" name "@" #args
 # define __ASM_FASTCALL(name,args) "@" name "@" #args
@@ -75,6 +81,14 @@
 # define __ASM_FUNC_SIZE(name) "\n\t.size " name ",.-" name
 #endif
 
+#ifdef __WINE_PE_BUILD
+# define __ASM_GLOBL(name) ".globl " name "\n" name ":"
+#elif defined(__APPLE__)
+# define __ASM_GLOBL(name) ".globl " name "\n\t.private_extern " name "\n" name ":"
+#else
+# define __ASM_GLOBL(name) ".globl " name "\n\t.hidden " name "\n" name ":"
+#endif
+
 #if !defined(__GNUC__) && !defined(__clang__)
 # define __ASM_BLOCK_BEGIN(name) void __asm_dummy_##name(void) {
 # define __ASM_BLOCK_END         }
@@ -92,6 +106,20 @@
 #define __ASM_GLOBAL_FUNC(name,code) __ASM_DEFINE_FUNC(__ASM_NAME(#name),code)
 #define __ASM_STDCALL_FUNC(name,args,code) __ASM_DEFINE_FUNC(__ASM_STDCALL(#name,args),code)
 #define __ASM_FASTCALL_FUNC(name,args,code) __ASM_DEFINE_FUNC(__ASM_FASTCALL(#name,args),code)
+
+#ifdef _WIN64
+#define __ASM_DEFINE_POINTER(sec,decl,value)  \
+    __ASM_BLOCK_BEGIN(__LINE__) \
+    asm( sec "\n\t.balign 8\n\t" decl ".quad " value "\n\t.text" ); \
+    __ASM_BLOCK_END
+#else
+#define __ASM_DEFINE_POINTER(sec,decl,value)  \
+    __ASM_BLOCK_BEGIN(__LINE__) \
+    asm( sec "\n\t.balign 4\n\t" decl ".long " value "\n\t.text" ); \
+    __ASM_BLOCK_END
+#endif
+
+#define __ASM_GLOBAL_POINTER(name,value) __ASM_DEFINE_POINTER(".data",__ASM_GLOBL(name) "\n\t",value)
 
 /* import variables */
 
