@@ -26,7 +26,79 @@ env:
   WINE_MONO: https://github.com/madewokherd/wine-mono/releases/download/wine-mono-7.4.1/wine-mono-7.4.1-x86.tar.xz
 
 jobs:
+  sdk-smoke:
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Check macOS SDK headers
+        run: |
+          mkdir -p "$RUNNER_TEMP/vineyardmac-smoke"
+          printf '#define HAVE_AVFOUNDATION_AVFOUNDATION_H 1\n' > "$RUNNER_TEMP/vineyardmac-smoke/config.h"
+
+          xcrun --sdk macosx clang -m64 -fblocks -fsyntax-only -x objective-c \
+            -I "$RUNNER_TEMP/vineyardmac-smoke" \
+            -I dlls/winecoreaudio.drv \
+            -I include \
+            -D__WINESRC__ \
+            -DWINE_NO_LONG_TYPES \
+            -D_UCRT \
+            -DWINE_UNIX_LIB \
+            -Wall \
+            -pipe \
+            -fcf-protection=none \
+            -fno-stack-protector \
+            -fno-strict-aliasing \
+            -Wdeclaration-after-statement \
+            -Wempty-body \
+            -Wignored-qualifiers \
+            -Winit-self \
+            -Wno-pragma-pack \
+            -Wstrict-prototypes \
+            -Wtype-limits \
+            -Wvla \
+            -Wwrite-strings \
+            -Wpointer-arith \
+            -fPIC \
+            -fasynchronous-unwind-tables \
+            -O3 \
+            -U_FORTIFY_SOURCE \
+            -D_FORTIFY_SOURCE=0 \
+            dlls/winecoreaudio.drv/authorization.m
+
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/security.c" <<'EOF'
+          #include <CoreFoundation/CFString.h>
+          #define LoadResource mac_LoadResource
+          #define GetCurrentThread mac_GetCurrentThread
+          #include <CoreServices/CoreServices.h>
+          #include <Security/cssmtype.h>
+          #include <Security/SecKeychain.h>
+          #include <Security/SecKeychainItem.h>
+          #include <Security/SecKeychainSearch.h>
+          #include <Security/SecTrustSettings.h>
+          #undef LoadResource
+          #undef GetCurrentThread
+
+          int main(void)
+          {
+              SecKeychainSearchRef search = 0;
+              SecKeychainItemRef item = 0;
+              SecKeychainAttributeList *attr_list = 0;
+              SecKeychainAttributeInfo info = {0};
+              SecKeychainSearchCreateFromAttributes(0, kSecGenericPasswordItemClass, 0, &search);
+              SecKeychainSearchCopyNext(search, &item);
+              SecKeychainItemCopyAttributesAndData(item, &info, 0, &attr_list, 0, 0);
+              return 0;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/security.c"
+
   build:
+    needs: sdk-smoke
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4

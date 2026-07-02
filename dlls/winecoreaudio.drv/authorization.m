@@ -25,7 +25,7 @@
 #include "config.h"
 
 #ifdef HAVE_AVFOUNDATION_AVFOUNDATION_H
-#import <Foundation/Foundation.h>
+#include <objc/objc.h>
 #include <dispatch/dispatch.h>
 #endif
 
@@ -33,9 +33,25 @@
 
 #ifdef HAVE_AVFOUNDATION_AVFOUNDATION_H
 
+typedef long NSInteger;
+
+@class NSString;
+
+@interface NSAutoreleasePool
+    + (id)alloc;
+    - (id)init;
+    - (void)release;
+@end
+
+@interface NSNotificationCenter
+    + (id)defaultCenter;
+    - (void)postNotificationName:(NSString *)notificationName object:(id)object;
+@end
+
 extern NSString * const AVMediaTypeAudio;
 
-@interface AVCaptureDevice : NSObject
+@interface AVCaptureDevice
+    + (BOOL)respondsToSelector:(SEL)aSelector;
     + (NSInteger)authorizationStatusForMediaType:(NSString *)mediaType;
     + (void)requestAccessForMediaType:(NSString *)mediaType completionHandler:(void (^)(BOOL granted))handler;
 @end
