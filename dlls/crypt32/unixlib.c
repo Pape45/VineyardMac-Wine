@@ -30,6 +30,8 @@
 #include <dlfcn.h>
 #include <sys/stat.h>
 #ifdef HAVE_SECURITY_SECURITY_H
+#include <Security/SecImportExport.h>
+#include <Security/SecTrustSettings.h>
 #include <Security/Security.h>
 #endif
 #ifdef SONAME_LIBGNUTLS
@@ -638,13 +640,13 @@ static void load_root_certs(void)
     for (domain = 0; domain < ARRAY_SIZE(domains); domain++)
     {
         status = SecTrustSettingsCopyCertificates(domains[domain], &certs);
-        if (status == noErr)
+        if (status == errSecSuccess)
         {
             for (i = 0; i < CFArrayGetCount(certs); i++)
             {
                 SecCertificateRef cert = (SecCertificateRef)CFArrayGetValueAtIndex(certs, i);
                 CFDataRef certData;
-                if ((status = SecItemExport(cert, kSecFormatX509Cert, 0, NULL, &certData)) == noErr)
+                if ((status = SecItemExport(cert, kSecFormatX509Cert, 0, NULL, &certData)) == errSecSuccess)
                 {
                     BYTE *data = add_cert( CFDataGetLength(certData) );
                     if (data) memcpy( data, CFDataGetBytePtr(certData), CFDataGetLength(certData) );
