@@ -43,6 +43,7 @@
 #include <fenv.h>
 #include <unistd.h>
 
+#include <MacTypes.h>
 #include <libkern/OSAtomic.h>
 #include <CoreAudio/CoreAudio.h>
 #include <AudioToolbox/AudioFormat.h>

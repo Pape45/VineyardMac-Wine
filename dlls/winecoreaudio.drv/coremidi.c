@@ -47,6 +47,7 @@
 #define MAKE_HRESULT __carbon_MAKE_HRESULT
 #define HRESULT __carbon_HRESULT
 #define STDMETHODCALLTYPE __carbon_STDMETHODCALLT
+#include <MacTypes.h>
 #include <mach/mach_time.h>
 #include <CoreMIDI/CoreMIDI.h>
 #include <AudioUnit/AudioUnit.h>

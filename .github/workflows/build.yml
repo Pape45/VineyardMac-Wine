@@ -97,6 +97,88 @@ jobs:
 
           xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/security.c"
 
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/coreaudio.c" <<'EOF'
+          #define LoadResource __carbon_LoadResource
+          #define CompareString __carbon_CompareString
+          #define GetCurrentThread __carbon_GetCurrentThread
+          #define GetCurrentProcess __carbon_GetCurrentProcess
+          #include <MacTypes.h>
+          #include <libkern/OSAtomic.h>
+          #include <CoreAudio/CoreAudio.h>
+          #include <AudioToolbox/AudioFormat.h>
+          #include <AudioToolbox/AudioConverter.h>
+          #include <AudioUnit/AudioUnit.h>
+          #undef LoadResource
+          #undef CompareString
+          #undef GetCurrentThread
+          #undef GetCurrentProcess
+          #undef _CDECL
+
+          int main(void)
+          {
+              return noErr;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/coreaudio.c"
+
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/coremidi.c" <<'EOF'
+          #define ULONG __carbon_ULONG
+          #define E_INVALIDARG __carbon_E_INVALIDARG
+          #define E_OUTOFMEMORY __carbon_E_OUTOFMEMORY
+          #define E_HANDLE __carbon_E_HANDLE
+          #define E_ACCESSDENIED __carbon_E_ACCESSDENIED
+          #define E_UNEXPECTED __carbon_E_UNEXPECTED
+          #define E_FAIL __carbon_E_FAIL
+          #define E_ABORT __carbon_E_ABORT
+          #define E_POINTER __carbon_E_POINTER
+          #define E_NOINTERFACE __carbon_E_NOINTERFACE
+          #define E_NOTIMPL __carbon_E_NOTIMPL
+          #define S_FALSE __carbon_S_FALSE
+          #define S_OK __carbon_S_OK
+          #define HRESULT_FACILITY __carbon_HRESULT_FACILITY
+          #define IS_ERROR __carbon_IS_ERROR
+          #define FAILED __carbon_FAILED
+          #define SUCCEEDED __carbon_SUCCEEDED
+          #define MAKE_HRESULT __carbon_MAKE_HRESULT
+          #define HRESULT __carbon_HRESULT
+          #define STDMETHODCALLTYPE __carbon_STDMETHODCALLT
+          #include <MacTypes.h>
+          #include <mach/mach_time.h>
+          #include <CoreMIDI/CoreMIDI.h>
+          #include <AudioUnit/AudioUnit.h>
+          #include <AudioToolbox/AudioToolbox.h>
+          #undef ULONG
+          #undef E_INVALIDARG
+          #undef E_OUTOFMEMORY
+          #undef E_HANDLE
+          #undef E_ACCESSDENIED
+          #undef E_UNEXPECTED
+          #undef E_FAIL
+          #undef E_ABORT
+          #undef E_POINTER
+          #undef E_NOINTERFACE
+          #undef E_NOTIMPL
+          #undef S_FALSE
+          #undef S_OK
+          #undef HRESULT_FACILITY
+          #undef IS_ERROR
+          #undef FAILED
+          #undef SUCCEEDED
+          #undef MAKE_HRESULT
+          #undef HRESULT
+          #undef STDMETHODCALLTYPE
+
+          int main(void)
+          {
+              ItemCount items = 0;
+              ByteCount bytes = 0;
+              return (int)(items + bytes);
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/coremidi.c"
+
   build:
     needs: sdk-smoke
     runs-on: macos-15-intel
