@@ -26,22 +26,19 @@
 
 #ifdef HAVE_AVFOUNDATION_AVFOUNDATION_H
 #import <Foundation/Foundation.h>
-#import <AVFoundation/AVMediaFormat.h>
-#import <AVFoundation/AVCaptureDevice.h>
+#include <dispatch/dispatch.h>
 #endif
 
 #include "coreaudio_cocoa.h"
 
 #ifdef HAVE_AVFOUNDATION_AVFOUNDATION_H
 
-#if !defined(MAC_OS_X_VERSION_10_14) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_14
+extern NSString * const AVMediaTypeAudio;
 
-@interface AVCaptureDevice (WineCaptureAuthorizationExtensions)
-    + (NSInteger)authorizationStatusForMediaType:(AVMediaType)mediaType;
-    + (void)requestAccessForMediaType:(AVMediaType)mediaType completionHandler:(void (^)(BOOL granted))handler;
+@interface AVCaptureDevice : NSObject
+    + (NSInteger)authorizationStatusForMediaType:(NSString *)mediaType;
+    + (void)requestAccessForMediaType:(NSString *)mediaType completionHandler:(void (^)(BOOL granted))handler;
 @end
-
-#endif
 
 static NSString* const WineWillShowPermissionDialogNotification = @"WineWillShowPermissionDialogNotification";
 static NSString* const WineDidShowPermissionDialogNotification = @"WineDidShowPermissionDialogNotification";
