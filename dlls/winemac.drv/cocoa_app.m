@@ -18,8 +18,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#import <AppKit/AppKit.h>
 #include <CoreFoundation/CFAttributedString.h>
-#import <Carbon/Carbon.h>
+#include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
+#include <ApplicationServices/../Frameworks/HIServices.framework/Headers/HIShape.h>
+#include <ApplicationServices/../Frameworks/QD.framework/Headers/ColorSyncDeprecated.h>
+#include <Carbon/../Frameworks/HIToolbox.framework/Headers/HIToolbox.h>
 
 #include "wine/hostaddrspace_enter.h"
 

@@ -240,9 +240,12 @@ jobs:
           xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/iokit.c"
 
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m" <<'EOF'
+          #import <AppKit/AppKit.h>
           #include <CoreFoundation/CFAttributedString.h>
-          #import <Carbon/Carbon.h>
-          #import <Cocoa/Cocoa.h>
+          #include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
+          #include <ApplicationServices/../Frameworks/HIServices.framework/Headers/HIShape.h>
+          #include <ApplicationServices/../Frameworks/QD.framework/Headers/ColorSyncDeprecated.h>
+          #include <Carbon/../Frameworks/HIToolbox.framework/Headers/HIToolbox.h>
 
           int main(void)
           {
@@ -251,7 +254,27 @@ jobs:
           EOF
 
           xcrun --sdk macosx clang -m64 -fsyntax-only -x objective-c \
+            -D__WINESRC__ \
+            -DWINE_NO_LONG_TYPES \
             "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m"
+
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_hostaddrspace.m" <<'EOF'
+          #import <AppKit/AppKit.h>
+          #include "wine/hostaddrspace_enter.h"
+          #include "macdrv_cocoa.h"
+
+          int main(void)
+          {
+              return 0;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only -x objective-c \
+            -I include \
+            -I dlls/winemac.drv \
+            -D__WINESRC__ \
+            -DWINE_NO_LONG_TYPES \
+            "$RUNNER_TEMP/vineyardmac-smoke/winemac_hostaddrspace.m"
 
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_power.c" <<'EOF'
           #define GetCurrentThread Mac_GetCurrentThread

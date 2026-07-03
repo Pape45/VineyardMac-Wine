@@ -21,8 +21,12 @@
 #include "config.h"
 
 #define GL_SILENCE_DEPRECATION
+#import <AppKit/AppKit.h>
 #include <CoreFoundation/CFAttributedString.h>
-#import <Carbon/Carbon.h>
+#include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
+#include <ApplicationServices/../Frameworks/HIServices.framework/Headers/HIShape.h>
+#include <ApplicationServices/../Frameworks/QD.framework/Headers/ColorSyncDeprecated.h>
+#include <Carbon/../Frameworks/HIToolbox.framework/Headers/HIToolbox.h>
 #import <CoreVideo/CoreVideo.h>
 #ifdef HAVE_METAL_METAL_H
 #import <Metal/Metal.h>

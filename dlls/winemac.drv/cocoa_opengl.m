@@ -19,6 +19,7 @@
  */
 
 #define GL_SILENCE_DEPRECATION
+#import <AppKit/AppKit.h>
 #include <OpenGL/gl.h>
 
 #include "wine/hostaddrspace_enter.h"
