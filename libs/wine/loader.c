@@ -39,6 +39,7 @@
 #include <crt_externs.h>
 #define environ (*_NSGetEnviron())
 #include <CoreFoundation/CoreFoundation.h>
+extern CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 #define LoadResource MacLoadResource
 #define GetCurrentThread MacGetCurrentThread
 #include <CoreServices/CoreServices.h>

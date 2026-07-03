@@ -59,6 +59,7 @@
 #endif
 #ifdef __APPLE__
 # include <CoreFoundation/CoreFoundation.h>
+extern CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 # define LoadResource MacLoadResource
 # define GetCurrentThread MacGetCurrentThread
 # include <CoreServices/CoreServices.h>
