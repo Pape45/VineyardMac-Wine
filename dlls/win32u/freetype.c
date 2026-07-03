@@ -63,8 +63,9 @@
 #define SetRectRgn __carbon_SetRectRgn
 #define ShowWindow __carbon_ShowWindow
 #include <CoreFoundation/CFAttributedString.h>
+#include <CoreServices/CoreServices.h>
+#include <CoreText/CoreText.h>
 #include <ApplicationServices/ApplicationServices.h>
-#include <Carbon/Carbon.h>
 #undef LoadResource
 #undef CompareString
 #undef GetCurrentThread
