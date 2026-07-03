@@ -27,6 +27,7 @@
 #define GetCurrentThread Mac_GetCurrentThread
 #define LoadResource Mac_LoadResource
 #include <CoreServices/CoreServices.h>
+#include <CoreServices/../Frameworks/OSServices.framework/Headers/Power.h>
 #undef GetCurrentThread
 #undef LoadResource
 

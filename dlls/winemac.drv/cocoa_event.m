@@ -22,6 +22,7 @@
 #include <sys/event.h>
 #include <sys/time.h>
 #include <libkern/OSAtomic.h>
+#include <CoreFoundation/CFAttributedString.h>
 #import <Carbon/Carbon.h>
 
 #include "wine/hostaddrspace_enter.h"

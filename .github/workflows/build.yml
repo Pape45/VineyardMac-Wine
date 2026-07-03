@@ -239,6 +239,113 @@ jobs:
 
           xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/iokit.c"
 
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m" <<'EOF'
+          #include <CoreFoundation/CFAttributedString.h>
+          #import <Carbon/Carbon.h>
+          #import <Cocoa/Cocoa.h>
+
+          int main(void)
+          {
+              return 0;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only -x objective-c \
+            "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m"
+
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_power.c" <<'EOF'
+          #define GetCurrentThread Mac_GetCurrentThread
+          #define LoadResource Mac_LoadResource
+          #include <CoreServices/CoreServices.h>
+          #include <CoreServices/../Frameworks/OSServices.framework/Headers/Power.h>
+          #undef GetCurrentThread
+          #undef LoadResource
+
+          int main(void)
+          {
+              UpdateSystemActivity(UsrActivity);
+              return 0;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only \
+            "$RUNNER_TEMP/vineyardmac-smoke/winemac_power.c"
+
+          cat > "$RUNNER_TEMP/vineyardmac-smoke/freetype_macos.c" <<'EOF'
+          #define LoadResource __carbon_LoadResource
+          #define CheckMenuItem __carbon_CheckMenuItem
+          #define CompareString __carbon_CompareString
+          #define GetCurrentThread __carbon_GetCurrentThread
+          #define GetCurrentProcess __carbon_GetCurrentProcess
+          #define AnimatePalette __carbon_AnimatePalette
+          #define DeleteMenu __carbon_DeleteMenu
+          #define DrawMenu __carbon_DrawMenu
+          #define DrawMenuBar __carbon_DrawMenuBar
+          #define EnableMenuItem __carbon_EnableMenuItem
+          #define EqualRgn __carbon_EqualRgn
+          #define FillRgn __carbon_FillRgn
+          #define FrameRgn __carbon_FrameRgn
+          #define GetMenu __carbon_GetMenu
+          #define GetPixel __carbon_GetPixel
+          #define InvertRgn __carbon_InvertRgn
+          #define IsWindowVisible __carbon_IsWindowVisible
+          #define LineTo __carbon_LineTo
+          #define MoveWindow __carbon_MoveWindow
+          #define OffsetRgn __carbon_OffsetRgn
+          #define PaintRgn __carbon_PaintRgn
+          #define Polygon __carbon_Polygon
+          #define ResizePalette __carbon_ResizePalette
+          #define SetRectRgn __carbon_SetRectRgn
+          #define ShowWindow __carbon_ShowWindow
+          #include <CoreFoundation/CFAttributedString.h>
+          #include <CoreServices/CoreServices.h>
+          #include <CoreText/CoreText.h>
+          #include <ApplicationServices/ApplicationServices.h>
+          #undef LoadResource
+          #undef CheckMenuItem
+          #undef CompareString
+          #undef GetCurrentThread
+          #undef GetCurrentProcess
+          #undef AnimatePalette
+          #undef DeleteMenu
+          #undef DrawMenu
+          #undef DrawMenuBar
+          #undef EnableMenuItem
+          #undef EqualRgn
+          #undef FillRgn
+          #undef FrameRgn
+          #undef GetMenu
+          #undef GetPixel
+          #undef InvertRgn
+          #undef IsWindowVisible
+          #undef LineTo
+          #undef MoveWindow
+          #undef OffsetRgn
+          #undef PaintRgn
+          #undef Polygon
+          #undef ResizePalette
+          #undef SetRectRgn
+          #undef ShowWindow
+
+          int main(void)
+          {
+              FSRef ref;
+              FamRec *fam = 0;
+              AsscEntry *assoc = 0;
+              CTFontCollectionRef collection = 0;
+              (void)ref;
+              (void)fam;
+              (void)assoc;
+              (void)collection;
+              return 0;
+          }
+          EOF
+
+          xcrun --sdk macosx clang -m64 -fsyntax-only \
+            -D__WINESRC__ \
+            -DWINE_NO_LONG_TYPES \
+            "$RUNNER_TEMP/vineyardmac-smoke/freetype_macos.c"
+
   build:
     needs: sdk-smoke
     runs-on: macos-15-intel
