@@ -451,17 +451,33 @@ jobs:
 
       - name: Build Checksum
         run: |
+          REQUIRED_FILES=(
+            "Libraries/Wine/bin/wine64"
+            "Libraries/Wine/bin/wineserver"
+            "Libraries/Wine/lib/libfreetype.6.dylib"
+            "Libraries/Wine/lib/libgnutls.30.dylib"
+            "Libraries/Wine/lib/wine/x86_64-unix/winemac.so"
+            "Libraries/Wine/lib/wine/x86_64-windows/winemac.drv"
+            "Libraries/Wine/lib/wine/x86_32on64-unix/winemac.so"
+            "Libraries/Wine/lib/wine/i386-windows/winemac.drv"
+          )
+
+          for file in "${REQUIRED_FILES[@]}"; do
+            test -e "$file" || { echo "Missing required packaged file: $file"; exit 1; }
+          done
+
+          Libraries/Wine/bin/wine64 --version
           find ./Libraries -type f -exec shasum "{}" + > SUMS.sha
 
       - name: Upload config64.log
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: config64
           path: build/wine64/config.log
 
       - name: Upload config32.log
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: config32

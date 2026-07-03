@@ -163,6 +163,17 @@ for lib in "${LIBS[@]}"; do
   fi
 done
 
+for dylib_path in \
+  "$(brew --prefix freetype)/lib/libfreetype.6.dylib" \
+  "$(brew --prefix gnutls)/lib/libgnutls.30.dylib"; do
+  if [ -f "$dylib_path" ]; then
+    echo "Checking dependencies for: $dylib_path"
+    find_dylib_dependencies "$dylib_path"
+  else
+    echo "Error: $dylib_path not found"
+  fi
+done
+
 # Copy all found dylibs to the appropriate directories
 for dylib in "${all_dylibs[@]}"; do
   copy_libraries "$dylib"
