@@ -32,6 +32,7 @@
 #ifdef HAVE_SECURITY_SECURITY_H
 #include <Security/SecTrustSettings.h>
 #include <Security/Security.h>
+extern OSStatus SecTrustSettingsCopyCertificates(SecTrustSettingsDomain domain, CFArrayRef *certArray);
 #endif
 #ifdef SONAME_LIBGNUTLS
 #include <gnutls/pkcs12.h>
