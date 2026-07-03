@@ -22,8 +22,10 @@
 #include <sys/event.h>
 #include <sys/time.h>
 #include <libkern/OSAtomic.h>
-#import <AppKit/AppKit.h>
+#include <objc/NSObjCRuntime.h>
 #include <CoreFoundation/CFAttributedString.h>
+#import <AppKit/AppKit.h>
+#include <CoreServices/../Frameworks/OSServices.framework/Headers/IconStorage.h>
 #include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
 #include <ApplicationServices/../Frameworks/HIServices.framework/Headers/HIShape.h>
 #include <ApplicationServices/../Frameworks/QD.framework/Headers/ColorSyncDeprecated.h>

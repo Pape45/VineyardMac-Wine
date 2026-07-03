@@ -20,9 +20,13 @@
 
 #include "config.h"
 
+#include <dlfcn.h>
+
 #define GL_SILENCE_DEPRECATION
-#import <AppKit/AppKit.h>
+#include <objc/NSObjCRuntime.h>
 #include <CoreFoundation/CFAttributedString.h>
+#import <AppKit/AppKit.h>
+#include <CoreServices/../Frameworks/OSServices.framework/Headers/IconStorage.h>
 #include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
 #include <ApplicationServices/../Frameworks/HIServices.framework/Headers/HIShape.h>
 #include <ApplicationServices/../Frameworks/QD.framework/Headers/ColorSyncDeprecated.h>
@@ -2290,9 +2294,18 @@ static CVReturn WineDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTi
                 return;
         }
 
+        typedef CGImageRef (*CGWindowListCreateImageFromArrayProc)(CGRect, CFArrayRef, CGWindowImageOption);
+        static CGWindowListCreateImageFromArrayProc createWindowImage;
+        static dispatch_once_t createWindowImageOnce;
+        dispatch_once(&createWindowImageOnce, ^{
+            createWindowImage = (CGWindowListCreateImageFromArrayProc)dlsym(RTLD_DEFAULT, "CGWindowListCreateImageFromArray");
+        });
+        if (!createWindowImage)
+            return;
+
         const void* windowID = (const void*)(CGWindowID)window.windowNumber;
         CFArrayRef windowIDs = CFArrayCreate(NULL, &windowID, 1, NULL);
-        CGImageRef windowImage = CGWindowListCreateImageFromArray(CGRectNull, windowIDs, kCGWindowImageBoundsIgnoreFraming);
+        CGImageRef windowImage = createWindowImage(CGRectNull, windowIDs, kCGWindowImageBoundsIgnoreFraming);
         CFRelease(windowIDs);
         if (!windowImage)
             return;

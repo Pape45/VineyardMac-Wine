@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#include <objc/NSObjCRuntime.h>
+#include <CoreFoundation/CFAttributedString.h>
 #import <AppKit/AppKit.h>
 #ifdef HAVE_MTLDEVICE_REGISTRYID
 #import <Metal/Metal.h>

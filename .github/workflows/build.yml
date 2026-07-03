@@ -240,8 +240,10 @@ jobs:
           xcrun --sdk macosx clang -m64 -fsyntax-only "$RUNNER_TEMP/vineyardmac-smoke/iokit.c"
 
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m" <<'EOF'
-          #import <AppKit/AppKit.h>
+          #include <objc/NSObjCRuntime.h>
           #include <CoreFoundation/CFAttributedString.h>
+          #import <AppKit/AppKit.h>
+          #include <CoreServices/../Frameworks/OSServices.framework/Headers/IconStorage.h>
           #include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
           #include <ApplicationServices/../Frameworks/HIServices.framework/Headers/HIShape.h>
           #include <ApplicationServices/../Frameworks/QD.framework/Headers/ColorSyncDeprecated.h>
@@ -259,6 +261,8 @@ jobs:
             "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m"
 
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_hostaddrspace.m" <<'EOF'
+          #include <objc/NSObjCRuntime.h>
+          #include <CoreFoundation/CFAttributedString.h>
           #import <AppKit/AppKit.h>
           #include "wine/hostaddrspace_enter.h"
           #include "macdrv_cocoa.h"
@@ -275,6 +279,46 @@ jobs:
             -D__WINESRC__ \
             -DWINE_NO_LONG_TYPES \
             "$RUNNER_TEMP/vineyardmac-smoke/winemac_hostaddrspace.m"
+
+          for source in \
+            dlls/winemac.drv/cocoa_app.m \
+            dlls/winemac.drv/cocoa_event.m \
+            dlls/winemac.drv/cocoa_clipboard.m \
+            dlls/winemac.drv/cocoa_cursorclipping.m \
+            dlls/winemac.drv/cocoa_display.m \
+            dlls/winemac.drv/cocoa_opengl.m \
+            dlls/winemac.drv/cocoa_window.m
+          do
+            xcrun --sdk macosx clang -m64 -fblocks -fsyntax-only -x objective-c \
+              -I "$RUNNER_TEMP/vineyardmac-smoke" \
+              -I dlls/winemac.drv \
+              -I include \
+              -D__WINESRC__ \
+              -DWINE_NO_LONG_TYPES \
+              -D_UCRT \
+              -DWINE_UNIX_LIB \
+              -Wall \
+              -pipe \
+              -fcf-protection=none \
+              -fno-stack-protector \
+              -fno-strict-aliasing \
+              -Wdeclaration-after-statement \
+              -Wempty-body \
+              -Wignored-qualifiers \
+              -Winit-self \
+              -Wno-pragma-pack \
+              -Wstrict-prototypes \
+              -Wtype-limits \
+              -Wvla \
+              -Wwrite-strings \
+              -Wpointer-arith \
+              -fPIC \
+              -fasynchronous-unwind-tables \
+              -O3 \
+              -U_FORTIFY_SOURCE \
+              -D_FORTIFY_SOURCE=0 \
+              "$source"
+          done
 
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_power.c" <<'EOF'
           #define GetCurrentThread Mac_GetCurrentThread
