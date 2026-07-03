@@ -20,6 +20,7 @@
 
 #include <objc/NSObjCRuntime.h>
 #include <CoreFoundation/CFAttributedString.h>
+#import <Foundation/NSExtensionContext.h>
 #import <Cocoa/Cocoa.h>
 
 #include "wine/hostaddrspace_enter.h"

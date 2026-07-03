@@ -21,6 +21,7 @@
 #define GL_SILENCE_DEPRECATION
 #include <objc/NSObjCRuntime.h>
 #include <CoreFoundation/CFAttributedString.h>
+#import <Foundation/NSExtensionContext.h>
 #import <AppKit/AppKit.h>
 #include <OpenGL/gl.h>
 

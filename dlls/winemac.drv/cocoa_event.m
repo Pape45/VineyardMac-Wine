@@ -24,6 +24,7 @@
 #include <libkern/OSAtomic.h>
 #include <objc/NSObjCRuntime.h>
 #include <CoreFoundation/CFAttributedString.h>
+#import <Foundation/NSExtensionContext.h>
 #import <AppKit/AppKit.h>
 #include <CoreServices/../Frameworks/OSServices.framework/Headers/IconStorage.h>
 #include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>

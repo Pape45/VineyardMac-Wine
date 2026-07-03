@@ -242,6 +242,7 @@ jobs:
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_carbon.m" <<'EOF'
           #include <objc/NSObjCRuntime.h>
           #include <CoreFoundation/CFAttributedString.h>
+          #import <Foundation/NSExtensionContext.h>
           #import <AppKit/AppKit.h>
           #include <CoreServices/../Frameworks/OSServices.framework/Headers/IconStorage.h>
           #include <CoreServices/../Frameworks/LaunchServices.framework/Headers/IconsCore.h>
@@ -263,6 +264,7 @@ jobs:
           cat > "$RUNNER_TEMP/vineyardmac-smoke/winemac_hostaddrspace.m" <<'EOF'
           #include <objc/NSObjCRuntime.h>
           #include <CoreFoundation/CFAttributedString.h>
+          #import <Foundation/NSExtensionContext.h>
           #import <AppKit/AppKit.h>
           #include "wine/hostaddrspace_enter.h"
           #include "macdrv_cocoa.h"

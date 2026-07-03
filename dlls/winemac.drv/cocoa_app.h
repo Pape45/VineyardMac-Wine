@@ -20,6 +20,7 @@
 
 #include <objc/NSObjCRuntime.h>
 #include <CoreFoundation/CFAttributedString.h>
+#import <Foundation/NSExtensionContext.h>
 #import <AppKit/AppKit.h>
 
 #include "macdrv_cocoa.h"
