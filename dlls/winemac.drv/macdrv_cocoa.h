@@ -55,6 +55,7 @@
 #define ShowCursor MacShowCursor
 #define UnionRect MacUnionRect
 
+#include <CoreFoundation/CFAttributedString.h>
 #include <ApplicationServices/ApplicationServices.h>
 
 #undef GetCurrentProcess

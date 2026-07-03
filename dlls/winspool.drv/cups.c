@@ -68,6 +68,7 @@
 #define SetRect SetRect_Mac
 #define ShowCursor ShowCursor_Mac
 #define UnionRect UnionRect_Mac
+#include <CoreFoundation/CFAttributedString.h>
 #include <ApplicationServices/ApplicationServices.h>
 #undef GetCurrentProcess
 #undef GetCurrentThread

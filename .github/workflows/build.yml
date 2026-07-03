@@ -298,6 +298,8 @@ jobs:
 
           export ac_cv_lib_soname_MoltenVK="libMoltenVK.dylib"
           export ac_cv_lib_soname_vulkan=""
+          export ac_cv_header_ApplicationServices_ApplicationServices_h="yes"
+          export ac_cv_header_Carbon_Carbon_h="yes"
 
           mkdir -p ${{ env.BUILDROOT }}/wine64
           pushd ${{ env.BUILDROOT }}/wine64
@@ -356,6 +358,8 @@ jobs:
 
           export ac_cv_lib_soname_MoltenVK="libMoltenVK.dylib"
           export ac_cv_lib_soname_vulkan=""
+          export ac_cv_header_ApplicationServices_ApplicationServices_h="yes"
+          export ac_cv_header_Carbon_Carbon_h="yes"
 
           mkdir -p ${{ env.BUILDROOT }}/wine32on64
           pushd ${{ env.BUILDROOT }}/wine32on64
